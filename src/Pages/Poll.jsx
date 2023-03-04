@@ -3,11 +3,10 @@ import { useNavigate } from 'react-router-dom';
 
 export const Poll = () => {
   const [step, setStep] = useState(0);
-  const [price, setPrice] = useState();
   const [can, setCan] = useState(0);
   const [voter, setVoter] = useState(1);
+  const [method, setMethod] = useState('Simple');
   const [res, setRes] = useState();
-
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({});
@@ -19,13 +18,13 @@ export const Poll = () => {
         [name]: value,
       };
     });
-    console.log(formData);
+    // console.log(formData);
   }
 
   // const handlePayment = useCallback(async () => {
   //   fetch('http://localhost:3001/donate', {
   //     method: 'POST',
-  //     body: JSON.stringify({ amount: price }),
+  //     body: JSON.stringify({ amount: method }),
   //   })
   //     .then((results) => results.json())
   //     .then((data) => {
@@ -37,7 +36,7 @@ export const Poll = () => {
 
   //       const options = {
   //         key: 'rzp_test_71ifT7shoxSTLN',
-  //         amount: price,
+  //         amount: method,
   //         currency: 'INR',
   //         name: 'Sainik Suvidha',
   //         description: 'Donate your amount',
@@ -291,7 +290,7 @@ export const Poll = () => {
               {/* Invoice will be sent to this email address. */}
               {/* Thankyou for support us with{' '} */}
               Aliquam non diam blandit ipsum.
-              {/* <span className="font-medium"> ₹ {price}</span> */}
+              {/* <span className="font-medium"> {method}</span> */}
             </div>
             <div className="mt-2 text-[1.0rem] text-center">
               {/* This amount will be charged once from your payment method. Your
@@ -302,7 +301,51 @@ export const Poll = () => {
             {/* <div className="mt-2 text-[1.0rem] text-center">
               registered phone number
             </div> */}
-
+            <div className="font-medium text-[1rem] mt-7">
+              Select Votting Method
+            </div>
+            <div className="grid grid-cols-4 gap-20 mt-4">
+              <div
+                className={`cursor-pointer text-center border-gray-300 rounded-md border-[0.09rem] text-[1rem] py-[0.5rem] ${
+                  method == 'Simple'
+                    ? 'bg-blue-400 text-white hover:bg-blue-400'
+                    : 'hover:bg-slate-50'
+                }`}
+                onClick={() => setMethod('Simple')}
+              >
+                Simple
+              </div>
+              <div
+                className={`cursor-pointer text-center border-gray-300 rounded-md border-[0.09rem] text-[1rem] py-[0.5rem] ${
+                  method == 'Approval'
+                    ? 'bg-blue-400 text-white hover:bg-blue-400'
+                    : 'hover:bg-slate-50'
+                }`}
+                onClick={() => setMethod('Approval')}
+              >
+                Approval
+              </div>
+              <div
+                className={`cursor-pointer text-center border-gray-300 rounded-md border-[0.09rem] text-[1rem] py-[0.5rem] ${
+                  method == 'Rank'
+                    ? 'bg-blue-400 text-white hover:bg-blue-400'
+                    : 'hover:bg-slate-50'
+                }`}
+                onClick={() => setMethod('Rank')}
+              >
+                Rank
+              </div>
+              <div
+                className={`cursor-pointer text-center border-gray-300 rounded-md border-[0.09rem]  text-[1rem] py-[0.5rem] ${
+                  method == 'Quadratic'
+                    ? 'bg-blue-400 text-white'
+                    : 'hover:bg-slate-50'
+                }`}
+                onClick={() => setMethod('Quadratic')}
+              >
+                Quadratic
+              </div>
+            </div>
             <div className="mt-4 mb-4 flex justify-center">
               <div className="">
                 <button

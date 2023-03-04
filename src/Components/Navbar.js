@@ -12,9 +12,23 @@ const Navbar = ({ connect, defaultAccount }) => {
           defaultAccount ? 'pl-40 pr-20' : 'px-40'
         } py-4  font-medium shadow`}
       >
-        <div className="text-2xl">Logo</div>
+        <div
+          className="text-2xl"
+          onClick={() => {
+            navigate('/');
+          }}
+        >
+          Logo
+        </div>
         <div className="flex gap-20">
-          <div className="cursor-pointer">Home</div>
+          <div
+            className="cursor-pointer"
+            onClick={() => {
+              navigate('/');
+            }}
+          >
+            Home
+          </div>
           <div className="cursor-pointer relative">
             <span onClick={() => setVote(!vote)}>Vote</span>
             {/* {vote ? (
@@ -47,7 +61,14 @@ const Navbar = ({ connect, defaultAccount }) => {
               </div>
             </div>
           </div>
-          <div className="cursor-pointer">Results</div>
+          <div
+            className="cursor-pointer"
+            onClick={() => {
+              navigate('/result');
+            }}
+          >
+            Results
+          </div>
           <div className="cursor-pointer" onClick={connect}>
             {defaultAccount ? defaultAccount : 'Connect'}
           </div>
