@@ -4,6 +4,8 @@ import Web3 from 'web3';
 import Navbar from './Components/Navbar';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Voting from './Pages/Voting';
+import { Poll } from './Pages/Poll';
+import Results from './Pages/Results';
 
 const App = () => {
   const [Message, setMessage] = useState(null);
@@ -102,6 +104,9 @@ const App = () => {
       <Navbar connect={connectWallet} defaultAccount={defaultAccount} />
       <Routes>
         <Route path="/" element={<Voting />} />
+        <Route path="/voting" element={<Voting />} />
+        <Route path="/create-poll" element={<Poll />} />
+        <Route path="/result" element={<Results />} />
       </Routes>
       {/* <div className="text-white mt-20">
         <center>
