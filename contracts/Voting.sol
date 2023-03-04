@@ -107,6 +107,16 @@ contract Voting{
         return timeRemaining;
     }
 
+    function getCandidateVoteCounts(uint uniqueId) public view returns (uint[] memory) {
+        require(uniqueId != 0, "Invalid unique ID");
+
+        uint[] memory voteCounts = new uint[](systems[uniqueId].numberOfCandidates);
+        for (uint i = 0; i < systems[uniqueId].numberOfCandidates; i++) {
+            voteCounts[i] = differentSystemVotes[uniqueId][systems[uniqueId].candidates[i]];
+        }
+        return voteCounts;
+    }
+    
     function getSystemIdsOfVoter(string memory _voterAddress) public view returns (uint[] memory) {
         uint[] memory systemIds = new uint[](systemCount);
         uint systemIndex = 0;

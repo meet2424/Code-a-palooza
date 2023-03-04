@@ -133,6 +133,18 @@ contract ApprovalVoting{
         return otherCandidates;
     }
 
+    function getCandidateVoteCounts(uint uniqueId) public view returns (uint[] memory) {
+        require(uniqueId != 0, "Invalid unique ID");
+
+        uint[] memory voteCounts = new uint[](systems[uniqueId].numberOfCandidates);
+        for (uint i = 0; i < systems[uniqueId].numberOfCandidates; i++) {
+            voteCounts[i] = differentSystemVotes[uniqueId][systems[uniqueId].candidates[i]];
+        }
+        return voteCounts;
+    }
+
+    
+
     function getTimeRemaining(uint _uniqueId) public view returns (uint) {
         require(systems[_uniqueId].votingPeriod > 0, "Poll has not started yet");
         require(systems[_uniqueId].votingPeriod > block.timestamp, "Poll has ended");
