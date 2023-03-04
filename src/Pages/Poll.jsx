@@ -128,7 +128,7 @@ export const Poll = ({ createPoll, defaultAccount }) => {
                 type="text"
                 className="placeholder:text-[1.0rem] bg-w outline-none py-[0.5rem] w-[70%] px-4 mt-2 border-gray-300 border-[0.08rem]"
                 placeholder="Enter here"
-                onChange={(e) => handleValue('descriptiom', e.target.value)}
+                onChange={(e) => handleValue('description', e.target.value)}
               />
             </div>
             <div className="flex items-center gap-10 mt-5">
