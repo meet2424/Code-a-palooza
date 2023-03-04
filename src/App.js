@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import Navbar from './Components/Navbar';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Voting from './Pages/Voting';
 
 const App = () => {
   const [Message, setMessage] = useState(null);
@@ -49,77 +51,82 @@ const App = () => {
     setDefaultAccount(accountName);
   };
 
-  // const createPoll = async (account, data) => {
-  //   const web3 = window.web3;
-  //   const networkId = await web3.eth.net.getId();
-  //   const networkData = Voting.networks[networkId];
-  //   if (networkData) {
-  //     // Assign contract
-  //     const dstorage = new web3.eth.Contract(Voting.abi, networkData.address);
-  //     console.log(dstorage);
-  //     const res = await dstorage.methods
-  //       .createSystem(
-  //         123, //uniqueId
-  //         'My Voting System', //System Name
-  //         3, // _numberOfCandidates
-  //         ['Alice', 'Bob', 'Charlie'], //_candidates
-  //         7, //numberOfDays
-  //         ['Voter1', 'Voter2', 'Voter3'], //_votersForElection
-  //         'Election ABC Inc.' //_electionHelderName
-  //       )
-  //       .send({ from: account })
-  //       .on('transactionHash', (hash) => {
-  //         // console.log('Success');
-  //         setMessage('Poll created!!');
-  //       });
-  //   } else {
-  //     window.alert('DStorage contract not deployed to detected network.');
-  //     return 'error';
-  //   }
-  // };
+  const createPoll = async (account, data) => {
+    const web3 = window.web3;
+    const networkId = await web3.eth.net.getId();
+    const networkData = Voting.networks[networkId];
+    if (networkData) {
+      // Assign contract
+      const dstorage = new web3.eth.Contract(Voting.abi, networkData.address);
+      console.log(dstorage);
+      const res = await dstorage.methods
+        .createSystem(
+          123, //uniqueId
+          'My Voting System', //System Name
+          3, // _numberOfCandidates
+          ['Alice', 'Bob', 'Charlie'], //_candidates
+          7, //numberOfDays
+          ['Voter1', 'Voter2', 'Voter3'], //_votersForElection
+          'Election ABC Inc.' //_electionHelderName
+        )
+        .send({ from: account })
+        .on('transactionHash', (hash) => {
+          // console.log('Success');
+          setMessage('Poll created!!');
+        });
+    } else {
+      window.alert('DStorage contract not deployed to detected network.');
+      return 'error';
+    }
+  };
 
-  // const getVoters = async (uniqueId = 123) => {
-  //   const web3 = window.web3;
-  //   const networkId = await web3.eth.net.getId();
-  //   const networkData = Voting.networks[networkId];
-  //   if (networkData) {
-  //     // Assign contract
-  //     const dstorage = new web3.eth.Contract(Voting.abi, networkData.address);
-  //     const voters = await dstorage.methods.getVoters(uniqueId).call();
-  //     // console.log(voters);
-  //     return voters;
-  //   } else {
-  //     window.alert('DStorage contract not deployed to detected network.');
-  //     return 'error';
-  //   }
-  // };
+  const getVoters = async (uniqueId = 123) => {
+    const web3 = window.web3;
+    const networkId = await web3.eth.net.getId();
+    const networkData = Voting.networks[networkId];
+    if (networkData) {
+      // Assign contract
+      const dstorage = new web3.eth.Contract(Voting.abi, networkData.address);
+      const voters = await dstorage.methods.getVoters(uniqueId).call();
+      // console.log(voters);
+      return voters;
+    } else {
+      window.alert('DStorage contract not deployed to detected network.');
+      return 'error';
+    }
+  };
   // const result = await contract.methods.<method-name>(<arguments>).call();
 
   return (
     <>
-      <Navbar />
-      <center>
-        <h1>MetaMask Wallet Connection </h1>
+      <Navbar connect={connectWallet} defaultAccount={defaultAccount} />
+      <Routes>
+        <Route path="/" element={<Voting />} />
+      </Routes>
+      {/* <div className="text-white mt-20">
+        <center>
+          <h1>MetaMask Wallet Connection </h1>
 
-        <button onClick={connectWallet}>Connect Wallet Button</button>
-        <h3>Address: {defaultAccount}</h3>
+          <button onClick={connectWallet}>Connect Wallet Button</button>
+          <h3>Address: {defaultAccount}</h3>
 
-        {/* <h3>Enter uniqueId: </h3>
-        <input type="text" placeholder="Address: " /> */}
+          <h3>Enter uniqueId: </h3>
+        <input type="text" placeholder="Address: " />
 
-        {defaultAccount && (
-          <>
-            {/* <button onClick={() => createPoll(defaultAccount[0])}> */}
-            Create Poll
-            {/* </button> */}
-            {/* <button onClick={() => console.log(defaultAccount[0])}>
+          {defaultAccount && (
+            <>
+              <button onClick={() => createPoll(defaultAccount[0])}>
               Create Poll
-            </button> */}
-            <div>{Message}</div>
-          </>
-        )}
-        {/* {errorMessage} */}
-      </center>
+              </button>
+              <button onClick={() => console.log(defaultAccount[0])}>
+              Create Poll
+            </button>
+              <div>{Message}</div>
+            </>
+          )}
+          {errorMessage}
+        </center>
+      </div> */}
     </>
   );
 };
