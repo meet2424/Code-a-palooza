@@ -4,6 +4,7 @@ pragma solidity >=0.7.0 <0.9.0;
 // import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract Voting{
+    // using Strings for string;
     uint public systemCount;
     struct VotingSystem{
         uint uniqueId;
@@ -33,7 +34,6 @@ contract Voting{
         systemCount++;
     }
 
-
     address payable owner;
     mapping (address => uint) votingDone;
   
@@ -41,14 +41,13 @@ contract Voting{
         owner = payable(msg.sender);
     }
 
-
     function showBalance() public view returns(uint) {
         return address(this).balance;
     }
 
-    function voteKarteRaho(uint _uniqueId,string memory _candidateName,string memory _candidateAadhar) public  {
-        voteNow(_uniqueId,_candidateName,_candidateAadhar);
-    }
+    // function voteKarteRaho(uint _uniqueId,string memory _candidateName,string memory _candidateAadhar) public  {
+    //     voteNow(_uniqueId,_candidateName,_candidateAadhar);
+    // }
 
     function checkIfUserExists(uint _uniqueId,string memory _candidateAadhar) internal view returns(bool){
         for(uint i=0;i<systems[_uniqueId].votersForElection.length;i++){
@@ -58,16 +57,62 @@ contract Voting{
         }
         return false;
     }
-
-    function voteNow(uint _uniqueId,string memory _candidateName,string memory _candidateAadhar) internal{
-        require(checkIfUserExists(_uniqueId, _candidateAadhar),"You are not Authorized to Vote");
-        // require(differentSystemVotingDone[_uniqueId][msg.sender]==false,"You have already Voted");
-        // require(differentPanCardsVoting[_uniqueId][_candidateAadhar]==false,"You have already Voted");
-        require(systems[_uniqueId].votingPeriod >= block.timestamp, "The voting time is Over!");
-        differentSystemVotes[_uniqueId][_candidateName] +=1;
-        differentSystemVotingDone[_uniqueId][msg.sender] = true;
-        differentPanCardsVoting[_uniqueId][_candidateAadhar]=true;
+    function castRankVote(uint systemId, string memory voter, uint[] memory rankings) public {
+        // Make sure the voting period is open
+        require(block.timestamp < systems[systemId].votingPeriod, "Voting period has ended");
+        // Make sure the voter is eligible to vote
+        require(!differentPanCardsVoting[systemId][voter], "You have already voted");
+        // Make sure the rankings are valid
+        require(rankings.length == systems[systemId].numberOfCandidates, "Invalid number of rankings");
+        uint[] memory candidatePoints = new uint[](systems[systemId].numberOfCandidates);
+        for (uint i = 0; i < rankings.length; i++) {
+            uint candidateIndex = rankings[i] - 1; // Convert rank to index (1-based to 0-based)
+            require(candidateIndex < systems[systemId].numberOfCandidates, "Invalid candidate ranking");
+            candidatePoints[candidateIndex] += i + 1; // Assign points based on rank
+        }
+        // Update the vote count for each candidate
+        for (uint i = 0; i < systems[systemId].numberOfCandidates; i++) {
+            string memory candidateName = systems[systemId].candidates[i];
+            uint points = candidatePoints[i];
+            differentSystemVotes[systemId][candidateName] += points;
+        }
+        // Mark the voter as having voted
+        differentPanCardsVoting[systemId][voter] = true;
     }
+
+    function getCandidateVoteCounts(uint systemId) public view returns (uint[] memory) {
+        uint[] memory voteCounts = new uint[](systems[systemId].numberOfCandidates);
+        for (uint i = 0; i < systems[systemId].numberOfCandidates; i++) {
+            string memory candidateName = systems[systemId].candidates[i];
+            voteCounts[i] = differentSystemVotes[systemId][candidateName];
+        }
+        return voteCounts;
+    }
+    
+    function getLeadingCandidate(uint systemId) public view returns (string memory) {
+        string memory leadingCandidate = "";
+        uint leadingVoteCount = 0;
+        for (uint i = 0; i < systems[systemId].numberOfCandidates; i++) {
+            string memory candidateName = systems[systemId].candidates[i];
+            uint voteCount = differentSystemVotes[systemId][candidateName];
+            if (voteCount > leadingVoteCount) {
+                leadingCandidate = candidateName;
+                leadingVoteCount = voteCount;
+            }
+        }
+        return leadingCandidate;
+    }
+
+
+    // function voteNow(uint _uniqueId,string memory _candidateName,string memory _candidateAadhar) internal{
+    //     require(checkIfUserExists(_uniqueId, _candidateAadhar),"You are not Authorized to Vote");
+    //     require(differentSystemVotingDone[_uniqueId][msg.sender]==false,"You have already Voted");
+    //     require(differentPanCardsVoting[_uniqueId][_candidateAadhar]==false,"You have already Voted");
+    //     require(systems[_uniqueId].votingPeriod >= block.timestamp, "The voting time is Over!");
+    //     differentSystemVotes[_uniqueId][_candidateName] +=1;
+    //     differentSystemVotingDone[_uniqueId][msg.sender] = true;
+    //     differentPanCardsVoting[_uniqueId][_candidateAadhar]=true;
+    // }
 
     function getCandidates(uint _uniqueId) public view returns (string[] memory)  {
         return systems[_uniqueId].candidates;
@@ -114,25 +159,6 @@ contract Voting{
         return systemIds;
     }
 
-    function getOtherCandidates(uint _uniqueId, string memory _voterAadhar) public view returns (string[] memory) {
-        string[] memory candidates = systems[_uniqueId].candidates;
-        uint numCandidates = systems[_uniqueId].numberOfCandidates;
-        string[] memory otherCandidates = new string[](numCandidates - 1);
-        uint index = 0;
-
-        for (uint i = 0; i < numCandidates; i++) {
-            if (keccak256(bytes(systems[_uniqueId].votersForElection[i])) == keccak256(bytes(_voterAadhar))) {
-                // If the current voter has voted for this candidate, skip to the next candidate
-                continue;
-            }
-
-            otherCandidates[index] = candidates[i];
-            index++;
-        }
-
-        return otherCandidates;
-    }
-
     function getTimeRemaining(uint _uniqueId) public view returns (uint) {
         require(systems[_uniqueId].votingPeriod > 0, "Poll has not started yet");
         require(systems[_uniqueId].votingPeriod > block.timestamp, "Poll has ended");
@@ -141,5 +167,4 @@ contract Voting{
 
         return timeRemaining;
     }
-
 }

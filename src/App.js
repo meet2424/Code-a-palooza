@@ -7,6 +7,7 @@ import Voting from './Pages/Voting';
 import { Poll } from './Pages/Poll';
 import Results from './Pages/Results';
 import LandingPage from './Pages/LandingPage';
+import Verify from './Pages/Verify';
 
 const App = () => {
   const [Message, setMessage] = useState(null);
@@ -54,27 +55,41 @@ const App = () => {
     setDefaultAccount(accountName);
   };
 
-  const createPoll = async (account, data) => {
+  const createPoll = async (data, account) => {
+    console.log('in');
+    console.log(data);
+    const candidates = [];
+    for (let i = 1; i <= data.can; i++) {
+      candidates.push(data[`candidate${i}`]);
+    }
+    const voters = [];
+    for (let i = 1; i <= data.voter; i++) {
+      voters.push(data[`voter${i}`]);
+    }
+
+    // console.log(data);
+    // console.log(candidates);
+    // console.log(voters);
     const web3 = window.web3;
     const networkId = await web3.eth.net.getId();
     const networkData = Voting.networks[networkId];
     if (networkData) {
       // Assign contract
       const dstorage = new web3.eth.Contract(Voting.abi, networkData.address);
-      console.log(dstorage);
+      //   // console.log(dstorage);
       const res = await dstorage.methods
         .createSystem(
           123, //uniqueId
-          'My Voting System', //System Name
-          3, // _numberOfCandidates
-          ['Alice', 'Bob', 'Charlie'], //_candidates
-          7, //numberOfDays
-          ['Voter1', 'Voter2', 'Voter3'], //_votersForElection
-          'Election ABC Inc.' //_electionHelderName
+          data.systemName, //System Name
+          data.can, // _numberOfCandidates
+          candidates, //_candidates
+          data.days, //numberOfDays
+          voters, //_votersForElection
+          data.electionHelderName //_electionHelderName
         )
         .send({ from: account })
         .on('transactionHash', (hash) => {
-          // console.log('Success');
+          console.log('Success');
           setMessage('Poll created!!');
         });
     } else {
@@ -105,8 +120,23 @@ const App = () => {
       <Navbar connect={connectWallet} defaultAccount={defaultAccount} />
       <Routes>
         <Route exact path="/" element={<LandingPage />} />
+        <Route
+          path="/connect"
+          element={
+            <Verify connect={connectWallet} defaultAccount={defaultAccount} />
+          }
+        />
         <Route path="/voting" element={<Voting />} />
-        <Route path="/create-poll" element={<Poll />} />
+        <Route
+          path="/create-poll"
+          element={
+            defaultAccount ? (
+              <Poll createPoll={createPoll} defaultAccount={defaultAccount} />
+            ) : (
+              <Verify />
+            )
+          }
+        />
         <Route path="/result" element={<Results />} />
       </Routes>
       {/* <div className="text-white mt-20">

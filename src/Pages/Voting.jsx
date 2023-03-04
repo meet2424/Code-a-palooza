@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
 
 const Voting = () => {
+  const [vote, setVote] = useState({
+    vote1: false,
+    vote2: false,
+  });
+
+  const handleOpen = (name, value) => {
+    setVote((prev) => {
+      return {
+        prev,
+        [name]: value,
+      };
+    });
+  };
   const data = [
     {
       creater: 'Daniel Beerer',
@@ -36,7 +49,12 @@ const Voting = () => {
           {data.map((item, i) => {
             return (
               <div className="" key={i}>
-                <div className="flex py-5 items-center cursor-pointer hover:bg-gray-100">
+                <div
+                  className="flex py-5 items-center cursor-pointer hover:bg-gray-100"
+                  onClick={() =>
+                    handleOpen(`vote${i + 1}`, !vote[`vote${i + 1}`])
+                  }
+                >
                   <div className="pl-5 uppercase text-sm tracking-wide text-black font-medium w-[25%]">
                     {item.creater}
                   </div>
@@ -50,6 +68,62 @@ const Voting = () => {
                     VOTE
                   </div>
                 </div>
+                {vote[`vote${i + 1}`] && (
+                  <>
+                    <div className="w-[75%] mx-auto my-5 shadow-lg bg-slate-100 rounded-md px-5 py-4">
+                      <div className="flex justify-between">
+                        <div className="text-[1.12rem] tracking-wider font-semibold text-title">
+                          Approval Voting Method
+                        </div>
+                        <div className="text-[1.12rem] tracking-wider font-semibold">
+                          Expires in 7 days
+                        </div>
+                      </div>
+                      <div className="pl-10 my-2 text-lg text-black font-medium">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Integer non venenatis massa, quis gravida urna ?
+                      </div>
+                      <div className="pl-20">
+                        <div className="flex justify-around">
+                          <div className="flex gap-32 mt-4">
+                            <div className="text-lg font-semibold text-black">
+                              Candidate 1{' '}
+                            </div>
+                            <div className="cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]">
+                              VOTE
+                            </div>
+                          </div>
+                          <div className="flex gap-32 mt-4">
+                            <div className="text-lg font-semibold text-black">
+                              Candidate 2{' '}
+                            </div>
+                            <div className="cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]">
+                              VOTE
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex justify-around">
+                          <div className="flex gap-32 mt-4">
+                            <div className="text-lg font-semibold text-black">
+                              Candidate 3{' '}
+                            </div>
+                            <div className="cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]">
+                              VOTE
+                            </div>
+                          </div>
+                          <div className="flex gap-32 mt-4">
+                            <div className="text-lg font-semibold text-black">
+                              Candidate 4{' '}
+                            </div>
+                            <div className="cursor-pointer text-sm  border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]">
+                              VOTE
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
                 <div className="h-[0.1rem] bg-grey"></div>
               </div>
             );
