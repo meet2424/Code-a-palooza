@@ -1,9 +1,11 @@
 // import Voting from '../abis/Voting.json';
+import Voting from '../src/abis/Voting.json';
+// import Approval from '../abis/Approval.json';
 import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import Navbar from './Components/Navbar';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Voting from './Pages/Voting';
+import VotingPage from './Pages/Voting';
 import { Poll } from './Pages/Poll';
 import Results from './Pages/Results';
 import Verify from './Pages/Verify';
@@ -71,10 +73,33 @@ const App = () => {
     // console.log(voters);
     const web3 = window.web3;
     const networkId = await web3.eth.net.getId();
-    const networkData = Voting.networks[networkId];
+    let networkData;
+    // Assign contract
+    let dstorage;
+    switch (data.method) {
+      case 'Approval':
+        // networkData == Approval.networks[networkId];
+        // dstorage = new web3.eth.Contract(Approval.abi, networkData.address);
+        break;
+      case 'Simple':
+        dstorage = new web3.eth.Contract(
+          Voting.abi,
+          Voting.networks[networkId].address
+        );
+        break;
+      case 'Rank':
+        // networkData == Approval.networks[networkId];
+        // dstorage = new web3.eth.Contract(Voting.abi, networkData.address);
+        break;
+      case 'Quadratic':
+        // networkData == Approval.networks[networkId];
+        // dstorage = new web3.eth.Contract(Voting.abi, networkData.address);
+        break;
+
+      default:
+        break;
+    }
     if (networkData) {
-      // Assign contract
-      const dstorage = new web3.eth.Contract(Voting.abi, networkData.address);
       //   // console.log(dstorage);
       const res = await dstorage.methods
         .createSystem(
@@ -84,11 +109,13 @@ const App = () => {
           candidates, //_candidates
           data.days, //numberOfDays
           voters, //_votersForElection
-          data.electionHelderName //_electionHelderName
+          data.electionHelderName, //_electionHelderName
+          data.description
         )
         .send({ from: account })
         .on('transactionHash', (hash) => {
           console.log('Success');
+          window.alert('Success');
           setMessage('Poll created!!');
         });
     } else {
@@ -118,14 +145,17 @@ const App = () => {
     <>
       <Navbar connect={connectWallet} defaultAccount={defaultAccount} />
       <Routes>
-        <Route path="/" element={defaultAccount ? <Voting /> : <Verify />} />
+        <Route
+          path="/"
+          element={defaultAccount ? <VotingPage /> : <Verify />}
+        />
         <Route
           path="/connect"
           element={
             <Verify connect={connectWallet} defaultAccount={defaultAccount} />
           }
         />
-        <Route path="/voting" element={<Voting />} />
+        <Route path="/voting" element={<VotingPage />} />
         <Route
           path="/create-poll"
           element={
