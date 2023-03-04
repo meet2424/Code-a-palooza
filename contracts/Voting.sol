@@ -98,6 +98,15 @@ contract Voting{
         return winner;
     }
 
+    function getTimeRemaining(uint _uniqueId) public view returns (uint) {
+        require(systems[_uniqueId].votingPeriod > 0, "Poll has not started yet");
+        require(systems[_uniqueId].votingPeriod > block.timestamp, "Poll has ended");
+
+        uint timeRemaining = systems[_uniqueId].votingPeriod - block.timestamp;
+
+        return timeRemaining;
+    }
+
     function getSystemIdsOfVoter(string memory _voterAddress) public view returns (uint[] memory) {
         uint[] memory systemIds = new uint[](systemCount);
         uint systemIndex = 0;

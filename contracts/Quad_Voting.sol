@@ -74,7 +74,7 @@ contract Voting{
     
     function castQuadraticVote(uint _systemId, uint _candidateIndex, uint _value) public {
         require(systems[_systemId].votingPeriod >= block.timestamp, "Voting period has ended");
-        require(!differentSystemVotingDone[_systemId][msg.sender], "You have already casted your vote for this system");
+        // require(!differentSystemVotingDone[_systemId][msg.sender], "You have already casted your vote for this system");
         require(_candidateIndex < systems[_systemId].numberOfCandidates, "Invalid candidate index");
 
         Candidate storage selectedCandidate = systems[_systemId].candidates[_candidateIndex];
@@ -131,5 +131,13 @@ contract Voting{
         return winner;
     }
 
+    function getTimeRemaining(uint _uniqueId) public view returns (uint) {
+        require(systems[_uniqueId].votingPeriod > 0, "Poll has not started yet");
+        require(systems[_uniqueId].votingPeriod > block.timestamp, "Poll has ended");
+
+        uint timeRemaining = systems[_uniqueId].votingPeriod - block.timestamp;
+
+        return timeRemaining;
+    }
 
 }

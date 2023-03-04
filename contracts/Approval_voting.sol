@@ -133,4 +133,13 @@ contract Voting{
         return otherCandidates;
     }
 
+    function getTimeRemaining(uint _uniqueId) public view returns (uint) {
+        require(systems[_uniqueId].votingPeriod > 0, "Poll has not started yet");
+        require(systems[_uniqueId].votingPeriod > block.timestamp, "Poll has ended");
+
+        uint timeRemaining = systems[_uniqueId].votingPeriod - block.timestamp;
+
+        return timeRemaining;
+    }
+
 }
