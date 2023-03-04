@@ -41,9 +41,9 @@ contract Voting{
         owner = payable(msg.sender);
     }
 
-    function showBalance() public view returns(uint) {
-        return address(this).balance;
-    }
+    // function showBalance() public view returns(uint) {
+    //     return address(this).balance;
+    // }
 
     function voteKarteRaho(uint _uniqueId,string memory _candidateName,string memory _candidateAadhar) public  {
         voteNow(_uniqueId,_candidateName,_candidateAadhar);
