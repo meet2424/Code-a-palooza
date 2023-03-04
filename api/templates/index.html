@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://app.verifinger.com/sdk/fingerprintsdk.js"></script>
+  </head>
+  <head>
+    <title>Save Fingerprint Sensor Input as Image</title>
+  </head>
+  <body>
+    <h1>Fingerprint Capture</h1>
+    <form id="capture-form">
+      <div id="fingerprint-capture"></div>
+      <button type="submit">Submit</button>
+    </form>
+  
+    <script>
+      // Create a new instance of the fingerprint capture SDK
+      var fingerprintCapture = new FingerprintCapture();
+  
+      // Find the fingerprint capture container element
+      var fingerprintCaptureContainer = document.getElementById("fingerprint-capture");
+  
+      // Initialize the fingerprint capture SDK
+      fingerprintCapture.initialize(fingerprintCaptureContainer);
+  
+      // Add an event listener to the form submit button
+      var form = document.getElementById("capture-form");
+      form.addEventListener("submit", function(event) {
+        // Prevent the default form submit action
+        event.preventDefault();
+  
+        // Get the fingerprint image data from the SDK
+        var imageData = fingerprintCapture.getImageData();
+  
+        // Convert the image data to a Base64-encoded string
+        var base64Image = btoa(String.fromCharCode.apply(null, imageData));
+  
+        // Send the image data to the server using AJAX
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/detect/");
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify({ "image": base64Image }));
+      });
+    </script>
+  </body>
+  
