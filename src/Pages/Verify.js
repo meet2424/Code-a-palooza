@@ -1,24 +1,24 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react';
 
-const Verify = () => {
-    const [step, setStep] = useState(0);
-    const [can, setCan] = useState(0);
-    const [formData, setFormData] = useState({});
-    const [email,setEmail] =useState("")
-    const [password, setPassword] = useState("")
-    function handleValue(name, value) {
-        setFormData((prevFormData) => {
-          return {
-            ...prevFormData,
-            [name]: value,
-          };
-        });
-        console.log(formData);
-      }
+const Verify = ({ connect, defaultAccount }) => {
+  const [step, setStep] = useState(0);
+  const [can, setCan] = useState(0);
+  const [formData, setFormData] = useState({});
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  function handleValue(name, value) {
+    setFormData((prevFormData) => {
+      return {
+        ...prevFormData,
+        [name]: value,
+      };
+    });
+    console.log(formData);
+  }
 
   return (
     <>
-    {step == 0 && (
+      {step == 0 && (
         <div className="mt-32 border-[0.02rem] border-gray-300 w-[65%] mx-auto shadow">
           <div className="bg-grey flex justify-between w-full px-5 py-3">
             <div className="flex">
@@ -31,19 +31,18 @@ const Verify = () => {
             </div>
           </div>
           <div className=" px-5 py-2">
-            
             <div className="mt-4 mb-4 flex justify-center">
               <div className="">
                 <button
                   className="px-5 py-1 bg-blue-500 text-white hover:bg-blue-400 text-lg rounded-full"
-                  onClick={() => console.log(formData)}
+                  onClick={() => connect()}
                 >
                   Connect to MetaMask
                 </button>
               </div>
             </div>
             <div className="mt-5 text-[1.0rem] text-center">
-              Account Number
+              Account Number: {defaultAccount}
             </div>
             <div className="mt-4 mb-4 flex justify-end">
               <div className="">
@@ -58,7 +57,7 @@ const Verify = () => {
           </div>
         </div>
       )}
-    {step == 1 && (
+      {step == 1 && (
         <div className="mt-32 border-[0.02rem] border-gray-300 w-[65%] mx-auto shadow-xl">
           <div className="bg-grey flex justify-between w-full px-5 py-3">
             <div className="flex">
@@ -79,9 +78,7 @@ const Verify = () => {
               commodo.
             </div> */}
             <div className="flex items-center gap-10 mt-5">
-              <div className="text-black tracking-wider w-[18%]">
-                Email :{' '}
-              </div>
+              <div className="text-black tracking-wider w-[18%]">Email : </div>
               <input
                 type="text"
                 className="placeholder:text-[1.0rem] bg-w outline-none py-[0.5rem] w-[70%] px-4 mt-2 border-gray-300 border-[0.08rem]"
@@ -97,9 +94,7 @@ const Verify = () => {
                 type="text"
                 className="placeholder:text-[1.0rem] bg-w outline-none py-[0.5rem] w-[70%] px-4 mt-2 border-gray-300 border-[0.08rem]"
                 placeholder="Enter here"
-                onChange={(e) =>
-                  handleValue('password', e.target.value)
-                }
+                onChange={(e) => handleValue('password', e.target.value)}
               />
             </div>
             <div className="mt-4 mb-4 flex justify-center">
@@ -116,7 +111,7 @@ const Verify = () => {
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
-export default Verify
+export default Verify;

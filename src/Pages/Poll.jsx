@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const Poll = () => {
+export const Poll = ({ createPoll, defaultAccount }) => {
   const [step, setStep] = useState(0);
   const [can, setCan] = useState(0);
   const [voter, setVoter] = useState(1);
@@ -350,7 +350,10 @@ export const Poll = () => {
               <div className="">
                 <button
                   className="px-5 py-1 bg-blue-500 text-white hover:bg-blue-400 text-lg rounded-full"
-                  onClick={() => console.log(formData)}
+                  onClick={() => {
+                    const data = { ...formData, method, can, voter };
+                    createPoll(data, defaultAccount);
+                  }}
                 >
                   Create Poll
                 </button>
