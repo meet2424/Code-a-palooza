@@ -18,7 +18,7 @@ const Navbar = ({ connect, defaultAccount }) => {
             navigate('/');
           }}
         >
-          Logo
+          ElectionChain
         </div>
         <div className="flex gap-20">
           <div
@@ -69,8 +69,8 @@ const Navbar = ({ connect, defaultAccount }) => {
           >
             Results
           </div>
-          <div className="cursor-pointer" onClick={connect}>
-            {defaultAccount ? defaultAccount : 'Connect'}
+          <div className="cursor-pointer" onClick={() => navigate('/connect')}>
+            Connect
           </div>
         </div>
       </div>

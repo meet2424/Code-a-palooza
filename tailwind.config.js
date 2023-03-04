@@ -11,6 +11,7 @@ module.exports = {
         Wbg: '#fafafa',
         black: '#242423',
         grey: '#cdcdcd',
+        ble: '#7090e7',
       },
     },
   },
