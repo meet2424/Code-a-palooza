@@ -1,13 +1,96 @@
-import React, { useState } from 'react';
-
-const Voting = () => {
-  const [method, setMethod] = useState('Rank');
+import Voting from '../abis/Voting.json';
+import Approval from '../abis/ApprovalVoting.json';
+import Rank from '../abis/RankBasedVoting.json';
+import React, { useEffect, useState } from 'react';
+const VotingPage = ({ defaultAccount }) => {
+  const [method, setMethod] = useState('Approval');
   const [can, setCan] = useState(4);
+  const [data, setData] = useState([]);
   const [formData, setFormData] = useState({});
   const [vote, setVote] = useState({
     vote1: false,
     vote2: false,
   });
+  // const data = [
+  //   {
+  //     creater: 'Daniel Beerer',
+  //     description: 'Should we merge the last commit made around updating...',
+  //     days: '7 Days',
+  //   },
+  //   {
+  //     creater: 'Daniel Beerer',
+  //     description: 'Should we merge the last commit made around updating...',
+  //     days: '7 Days',
+  //   },
+  // ];
+
+  useEffect(() => {
+    const getApproval = async () => {
+      const web3 = window.web3;
+      const networkId = await web3.eth.net.getId();
+      const networkData = Approval.networks[networkId];
+      if (networkData) {
+        // Assign contract
+        const dstorage = new web3.eth.Contract(
+          Approval.abi,
+          networkData.address
+        );
+        const voters = await dstorage.methods.getSystemDetails('001').call();
+        console.log(voters);
+        if (voters) {
+          const d = [];
+          d.push({
+            creater: voters[6],
+            description: voters[7],
+            days: '7 Days',
+            candidates: voters[3],
+            voters: voters[5],
+            can: voters[2],
+            system: voters[1],
+            id: voters[0],
+            method: 'Approval',
+          });
+          setData(d);
+        }
+        // return voters;
+      } else {
+        window.alert('DStorage contract not deployed to detected network.');
+        return 'error';
+      }
+    };
+    const getRank = async () => {
+      const web3 = window.web3;
+      const networkId = await web3.eth.net.getId();
+      const networkData = Rank.networks[networkId];
+      if (networkData) {
+        // Assign contract
+        const dstorage = new web3.eth.Contract(Rank.abi, networkData.address);
+        const voters = await dstorage.methods.getSystemDetails('003').call();
+        console.log(voters);
+        if (voters) {
+          const d = [];
+          d.push({
+            creater: voters[6],
+            description: voters[7],
+            days: '7 Days',
+            candidates: voters[3],
+            voters: voters[5],
+            can: voters[2],
+            system: voters[1],
+            id: voters[0],
+            method: 'Rank',
+          });
+          setData(d);
+        }
+        // return voters;
+      } else {
+        window.alert('DStorage contract not deployed to detected network.');
+        return 'error';
+      }
+    };
+    // getApproval();
+    getRank();
+  }, []);
 
   function handleChange(event) {
     const { name, value, type, checked } = event.target;
@@ -28,19 +111,31 @@ const Voting = () => {
       };
     });
   };
-  const data = [
-    {
-      creater: 'Daniel Beerer',
-      description: 'Should we merge the last commit made around updating...',
-      days: '7 Days',
-    },
-    {
-      creater: 'Daniel Beerer',
-      description: 'Should we merge the last commit made around updating...',
-      days: '7 Days',
-    },
-  ];
 
+  const handleApprovalVote = async (id, candidate, voter) => {
+    const web3 = window.web3;
+    const networkId = await web3.eth.net.getId();
+    const networkData = Approval.networks[networkId];
+    if (networkData) {
+      // Assign contract
+      const dstorage = new web3.eth.Contract(Approval.abi, networkData.address);
+      const res = await dstorage.methods
+        .voteKarteRaho(
+          id, //uniqueId
+          candidate, //System Name
+          voter // _numberOfCandidates
+        )
+        .send({ from: defaultAccount[0] })
+        .on('transactionHash', (hash) => {
+          console.log('Success');
+          window.alert('Success');
+        });
+      // return voters;
+    } else {
+      window.alert('DStorage contract not deployed to detected network.');
+      return 'error';
+    }
+  };
   return (
     <>
       <div className="px-20 tracking-wider">
@@ -87,148 +182,88 @@ const Voting = () => {
                     <div className="w-[75%] mx-auto my-5 shadow-lg bg-slate-100 rounded-md px-5 py-4">
                       <div className="flex justify-between">
                         <div className="text-[1.12rem] tracking-wider font-semibold text-title">
-                          {method} Voting Method
+                          {item.method} Voting Method
                         </div>
                         <div className="text-[1.12rem] tracking-wider font-semibold">
                           Expires in 7 days
                         </div>
                       </div>
-                      <div className="pl-10 my-2 text-lg text-black font-medium">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Integer non venenatis massa, quis gravida urna ?
+                      <div className="pl-10 my-3 text-lg text-black font-medium">
+                        {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Integer non venenatis massa, quis gravida urna ? */}
+                        {item.description}
                       </div>
 
-                      {method == 'Approval' && (
+                      {item.method == 'Approval' && (
                         <div className="pl-20">
-                          <div className="flex justify-around">
-                            <div className="flex gap-32 mt-4">
-                              <div className="text-lg font-semibold text-black">
-                                Candidate 1{' '}
-                              </div>
-                              <div className="cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]">
-                                VOTE
-                              </div>
-                            </div>
-                            <div className="flex gap-32 mt-4">
-                              <div className="text-lg font-semibold text-black">
-                                Candidate 2{' '}
-                              </div>
-                              <div className="cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]">
-                                VOTE
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex justify-around">
-                            <div className="flex gap-32 mt-4">
-                              <div className="text-lg font-semibold text-black">
-                                Candidate 3{' '}
-                              </div>
-                              <div className="cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]">
-                                VOTE
-                              </div>
-                            </div>
-                            <div className="flex gap-32 mt-4">
-                              <div className="text-lg font-semibold text-black">
-                                Candidate 4{' '}
-                              </div>
-                              <div className="cursor-pointer text-sm  border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]">
-                                VOTE
-                              </div>
-                            </div>
+                          <div className="grid grid-cols-2">
+                            {item.candidates.map((c) => {
+                              return (
+                                <div className="flex gap-32 mt-4">
+                                  <div className="text-lg font-semibold text-black">
+                                    {c}{' '}
+                                  </div>
+                                  <div
+                                    className="cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]"
+                                    onClick={() =>
+                                      handleApprovalVote(item.id, c, 'v1')
+                                    }
+                                  >
+                                    VOTE
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       )}
-                      {method == 'Rank' && (
+                      {item.method == 'Rank' && (
                         <div className="pl-20">
-                          <div className="flex gap-10 mt-4">
-                            <div className="text-lg font-semibold text-black mr-4">
-                              Candidate 1{' '}
-                            </div>
-                            <div className="tracking-wide font-extralight">
-                              <input
-                                type="radio"
-                                id="rank11"
-                                name="rank1"
-                                value="rank11"
-                                checked={formData.rank1 === 'rank11'}
-                                onChange={handleChange}
-                                className="mr-2"
-                              />
-                              <label htmlFor="rank11">1</label>
-                            </div>
-                            <div className="tracking-wide font-extralight">
-                              <input
-                                type="radio"
-                                id="rank12"
-                                name="rank1"
-                                value="rank12"
-                                checked={formData.rank1 === 'rank12'}
-                                onChange={handleChange}
-                                className="mr-2"
-                              />
-                              <label htmlFor="rank12">2</label>
-                            </div>
-                            <div className="tracking-wide font-extralight">
-                              <input
-                                type="radio"
-                                id="rank13"
-                                name="rank1"
-                                value="rank13"
-                                checked={formData.rank1 === 'rank13'}
-                                onChange={handleChange}
-                                className="mr-2"
-                              />
-                              <label htmlFor="rank13">3</label>
-                            </div>
-                            <div className="tracking-wide font-extralight">
-                              <input
-                                type="radio"
-                                id="rank14"
-                                name="rank1"
-                                value="rank14"
-                                checked={formData.rank1 === 'rank14'}
-                                onChange={handleChange}
-                                className="mr-2"
-                              />
-                              <label htmlFor="rank14">4</label>
-                            </div>
+                          {item.candidates.map((i, index) => {
+                            return (
+                              <>
+                                <div className="flex items-center gap-10 mt-4">
+                                  <div className="text-lg font-semibold text-black mr-4">
+                                    {i}{' '}
+                                  </div>
+                                  {(() => {
+                                    let rows = [];
+                                    for (let j = 1; j <= item.can; j++) {
+                                      rows.push(
+                                        <div className="tracking-wide font-extralight ">
+                                          <input
+                                            type="radio"
+                                            id={`rank${index}${j}`}
+                                            name={`rank${index}`}
+                                            value={`rank${index}${j}`}
+                                            checked={
+                                              formData[`rank${index}`] ===
+                                              `rank${index}${j}`
+                                            }
+                                            onChange={handleChange}
+                                            className="mr-2 text-xl cursor-pointer"
+                                          />
+                                          <label
+                                            htmlFor={`rank${index}${j}`}
+                                            className="text-lg cursor-pointer"
+                                          >
+                                            {j}
+                                          </label>
+                                        </div>
+                                      );
+                                    }
+                                    return rows;
+                                  })()}
+                                </div>
+                              </>
+                            );
+                          })}
+                          <div
+                            className="cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]"
+                            onClick={() => handleRankVote(item.id, , 'v1')}
+                          >
+                            VOTE
                           </div>
-                          {/* <div className="flex justify-around">
-                            <div className="flex gap-32 mt-4">
-                              <div className="text-lg font-semibold text-black">
-                                Candidate 1{' '}
-                              </div>
-                              <div className="cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]">
-                                VOTE
-                              </div>
-                            </div>
-                            <div className="flex gap-32 mt-4">
-                              <div className="text-lg font-semibold text-black">
-                                Candidate 2{' '}
-                              </div>
-                              <div className="cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]">
-                                VOTE
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex justify-around">
-                            <div className="flex gap-32 mt-4">
-                              <div className="text-lg font-semibold text-black">
-                                Candidate 3{' '}
-                              </div>
-                              <div className="cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]">
-                                VOTE
-                              </div>
-                            </div>
-                            <div className="flex gap-32 mt-4">
-                              <div className="text-lg font-semibold text-black">
-                                Candidate 4{' '}
-                              </div>
-                              <div className="cursor-pointer text-sm  border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]">
-                                VOTE
-                              </div>
-                            </div>
-                          </div> */}
                         </div>
                       )}
                     </div>
@@ -259,4 +294,4 @@ const Voting = () => {
   );
 };
 
-export default Voting;
+export default VotingPage;

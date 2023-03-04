@@ -1,6 +1,6 @@
-// import Voting from '../abis/Voting.json';
-import Voting from '../src/abis/Voting.json';
-// import Approval from '../abis/Approval.json';
+import Voting from './abis/Voting.json';
+import Approval from './abis/ApprovalVoting.json';
+import Rank from './abis/RankBasedVoting.json';
 import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import Navbar from './Components/Navbar';
@@ -17,6 +17,7 @@ const App = () => {
 
   useEffect(() => {
     loadWeb3();
+    // connectWallet();
     // loadBlockchainData();
     // createPoll();
     // console.log(account);
@@ -60,37 +61,52 @@ const App = () => {
   const createPoll = async (data, account) => {
     console.log('in');
     console.log(data);
+    console.log('account', account);
     const candidates = [];
     for (let i = 1; i <= data.can; i++) {
-      candidates.push(data[`candidate${i}`]);
+      if (data[`voter${i}`]) {
+        candidates.push(data[`candidate${i}`]);
+      }
     }
     const voters = [];
     for (let i = 1; i <= data.voter; i++) {
-      voters.push(data[`voter${i}`]);
+      if (data[`voter${i}`]) {
+        voters.push(data[`voter${i}`]);
+      }
     }
 
-    // console.log(data);
-    // console.log(candidates);
-    // console.log(voters);
     const web3 = window.web3;
     const networkId = await web3.eth.net.getId();
     let networkData;
+    // console.log(networkData);
+    console.log(candidates);
+    console.log(voters);
     // Assign contract
     let dstorage;
     switch (data.method) {
       case 'Approval':
-        // networkData == Approval.networks[networkId];
-        // dstorage = new web3.eth.Contract(Approval.abi, networkData.address);
+        console.log('Approval');
+        console.log(Approval.networks[networkId].address);
+        dstorage = new web3.eth.Contract(
+          Approval.abi,
+          Approval.networks[networkId].address
+        );
         break;
       case 'Simple':
+        console.log('Simple');
+        console.log(Voting.networks[networkId].address);
         dstorage = new web3.eth.Contract(
           Voting.abi,
           Voting.networks[networkId].address
         );
         break;
       case 'Rank':
-        // networkData == Approval.networks[networkId];
-        // dstorage = new web3.eth.Contract(Voting.abi, networkData.address);
+        console.log('Rank');
+        console.log(Rank.networks[networkId].address);
+        dstorage = new web3.eth.Contract(
+          Rank.abi,
+          Rank.networks[networkId].address
+        );
         break;
       case 'Quadratic':
         // networkData == Approval.networks[networkId];
@@ -100,11 +116,12 @@ const App = () => {
       default:
         break;
     }
-    if (networkData) {
-      //   // console.log(dstorage);
+    if (dstorage) {
+      // const dstorage = new web3.eth.Contract(Approval.abi, networkData.address);
+      // console.log(dstorage);
       const res = await dstorage.methods
         .createSystem(
-          123, //uniqueId
+          '003', //uniqueId
           data.systemName, //System Name
           data.can, // _numberOfCandidates
           candidates, //_candidates
@@ -113,7 +130,7 @@ const App = () => {
           data.electionHelderName, //_electionHelderName
           data.description
         )
-        .send({ from: account })
+        .send({ from: account[0] })
         .on('transactionHash', (hash) => {
           console.log('Success');
           window.alert('Success');
@@ -156,7 +173,10 @@ const App = () => {
             <Verify connect={connectWallet} defaultAccount={defaultAccount} />
           }
         />
-        <Route path="/voting" element={<VotingPage />} />
+        <Route
+          path="/voting"
+          element={<VotingPage defaultAccount={defaultAccount} />}
+        />
         <Route
           path="/create-poll"
           element={
