@@ -6,6 +6,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Voting from './Pages/Voting';
 import { Poll } from './Pages/Poll';
 import Results from './Pages/Results';
+import LandingPage from './Pages/LandingPage';
 import Verify from './Pages/Verify';
 
 const App = () => {
@@ -118,7 +119,7 @@ const App = () => {
     <>
       <Navbar connect={connectWallet} defaultAccount={defaultAccount} />
       <Routes>
-        <Route path="/" element={defaultAccount ? <Voting /> : <Verify />} />
+        <Route exact path="/" element={<LandingPage />} />
         <Route
           path="/connect"
           element={
