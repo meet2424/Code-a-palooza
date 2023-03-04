@@ -3,7 +3,7 @@
 pragma solidity >=0.7.0 <0.9.0;
 // import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract Voting{
+contract ApprovalVoting{
     uint public systemCount;
     struct VotingSystem{
         uint uniqueId;

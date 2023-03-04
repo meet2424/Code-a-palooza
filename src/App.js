@@ -8,6 +8,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import VotingPage from './Pages/Voting';
 import { Poll } from './Pages/Poll';
 import Results from './Pages/Results';
+import LandingPage from './Pages/LandingPage';
 import Verify from './Pages/Verify';
 
 const App = () => {

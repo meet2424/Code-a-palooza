@@ -18,7 +18,7 @@ const Navbar = ({ connect, defaultAccount }) => {
             navigate('/');
           }}
         >
-          Logo
+          ElectionChain
         </div>
         <div className="flex gap-20">
           <div

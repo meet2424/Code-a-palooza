@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 
-const Verify = ({ connect, defaultAccount }) => {
-  const [step, setStep] = useState(0);
-  const [can, setCan] = useState(0);
-  const [formData, setFormData] = useState({});
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  function handleValue(name, value) {
-    setFormData((prevFormData) => {
-      return {
-        ...prevFormData,
-        [name]: value,
-      };
-    });
-    console.log(formData);
-  }
+const Verify = () => {
+    const [step, setStep] = useState(0);
+    const [can, setCan] = useState(0);
+    const [formData, setFormData] = useState({});
+    const [email,setEmail] =useState("")
+    const [pannumber, setPannumber] = useState("")
+    function handleValue(name, value) {
+        setFormData((prevFormData) => {
+          return {
+            ...prevFormData,
+            [name]: value,
+          };
+        });
+        console.log(formData);
+      }
 
   return (
     <>
@@ -70,13 +70,6 @@ const Verify = ({ connect, defaultAccount }) => {
             </div>
           </div>
           <div className=" px-5 py-2">
-            {/* <div className="mt-5 text-[1.0rem]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-              non venenatis massa, quis gravida urna. Aliquam non diam blandit,
-              varius eros ac, ullamcorper ipsum.Sed consequat scelerisque orci
-              et laoreet. Duis lobortis congue mi a dapibus proin eget magna
-              commodo.
-            </div> */}
             <div className="flex items-center gap-10 mt-5">
               <div className="text-black tracking-wider w-[18%]">Email : </div>
               <input
@@ -88,13 +81,15 @@ const Verify = ({ connect, defaultAccount }) => {
             </div>
             <div className="flex items-center gap-10 mt-5">
               <div className="text-black tracking-wider  w-[18%]">
-                Password :{' '}
+                Pancard Number:{' '}
               </div>
               <input
                 type="text"
                 className="placeholder:text-[1.0rem] bg-w outline-none py-[0.5rem] w-[70%] px-4 mt-2 border-gray-300 border-[0.08rem]"
                 placeholder="Enter here"
-                onChange={(e) => handleValue('password', e.target.value)}
+                onChange={(e) =>
+                  handleValue('pannumber', e.target.value)
+                }
               />
             </div>
             <div className="mt-4 mb-4 flex justify-center">
