@@ -37,10 +37,11 @@ def upload_path_handler(instance, filename):
         name=instance.email, file="1."+filename.split(".")[-1]
     )
 
-class User(models.Model):
+class User(AbstractUser):
     username = None
     first_name = None
     last_name = None
+    email = models.EmailField(unique=True)
     address = models.CharField(max_length=512)
     pan = models.CharField(max_length = 20)
     fingerprint = models.ImageField(upload_to=upload_path_handler, blank=True, null=True)
