@@ -5,15 +5,43 @@ const Verify = ({ connect, defaultAccount }) => {
   const [can, setCan] = useState(0);
   const [formData, setFormData] = useState({});
   const [email, setEmail] = useState('');
-  const [pannumber, setPannumber] = useState('');
-  function handleValue(name, value) {
-    setFormData((prevFormData) => {
-      return {
-        ...prevFormData,
-        [name]: value,
-      };
-    });
-    console.log(formData);
+  const [pan, setPan] = useState('');
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    createacc();
+  };
+  async function createacc() {
+    try {
+      let result = await fetch('http://jenilsavla.pythonanywhere.com/signup/', {
+        method: 'POST',
+        body: JSON.stringify({
+          password: '12345678',
+          email: email,
+          pan: pan,
+          address: JSON.stringify(defaultAccount),
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      });
+      result = await result.json();
+      console.log(result);
+      // if (result.token) {
+      //   // Swal.fire("Logged in Successfully!", "success", "success");
+      //   // sessionStorage.setItem('name', result.user.username);
+      //   // sessionStorage.setItem('user_id', JSON.parse(JSON.stringify(result.user.id)));
+      //   sessionStorage.setItem("token", result.token);
+      //   console.log("yess")
+      //   // history("/")
+      // } else {
+      //   // Swal.fire("Oops!!", "Some error while login", "error");
+      //   console.log("error");
+      // }
+    } catch (error) {
+      console.log('Error' + error);
+    }
   }
 
   return (
@@ -70,36 +98,47 @@ const Verify = ({ connect, defaultAccount }) => {
             </div>
           </div>
           <div className=" px-5 py-2">
-            <div className="flex items-center gap-10 mt-5">
-              <div className="text-black tracking-wider w-[18%]">Email : </div>
-              <input
-                type="text"
-                className="placeholder:text-[1.0rem] bg-w outline-none py-[0.5rem] w-[70%] px-4 mt-2 border-gray-300 border-[0.08rem]"
-                placeholder="Enter here"
-                onChange={(e) => handleValue('email', e.target.value)}
-              />
-            </div>
-            <div className="flex items-center gap-10 mt-5">
-              <div className="text-black tracking-wider  w-[18%]">
-                Pancard Number:{' '}
+            <form>
+              <div className="flex items-center gap-10 mt-5">
+                <div className="text-black tracking-wider w-[18%]">
+                  Email :{' '}
+                </div>
+                <input
+                  type="text"
+                  id="email"
+                  name="email"
+                  className="placeholder:text-[1.0rem] bg-w outline-none py-[0.5rem] w-[70%] px-4 mt-2 border-gray-300 border-[0.08rem]"
+                  placeholder="Enter here"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                />
               </div>
-              <input
-                type="text"
-                className="placeholder:text-[1.0rem] bg-w outline-none py-[0.5rem] w-[70%] px-4 mt-2 border-gray-300 border-[0.08rem]"
-                placeholder="Enter here"
-                onChange={(e) => handleValue('pannumber', e.target.value)}
-              />
-            </div>
-            <div className="mt-4 mb-4 flex justify-center">
-              <div className="">
-                <button
-                  className="px-5 py-2 bg-blue-500 text-white hover:bg-blue-400 text-lg rounded-full"
-                  // onClick={() => setStep(2)}
-                >
-                  Verify
-                </button>
+              <div className="flex items-center gap-10 mt-5">
+                <div className="text-black tracking-wider  w-[18%]">
+                  PanCard Number:{' '}
+                </div>
+                <input
+                  type="text"
+                  name="password"
+                  id="password"
+                  className="placeholder:text-[1.0rem] bg-w outline-none py-[0.5rem] w-[70%] px-4 mt-2 border-gray-300 border-[0.08rem]"
+                  placeholder="Enter here"
+                  onChange={(e) => setPan(e.target.value)}
+                  value={pan}
+                />
               </div>
-            </div>
+              <div className="mt-4 mb-4 flex justify-center">
+                <div className="">
+                  <button
+                    // type="submit"
+                    className="px-5 py-2 bg-blue-500 text-white hover:bg-blue-400 text-lg rounded-full"
+                    onClick={(e) => handleSubmit(e)}
+                  >
+                    Verify
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       )}
