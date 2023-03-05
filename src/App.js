@@ -177,7 +177,16 @@ const App = () => {
     <>
       <Navbar connect={connectWallet} defaultAccount={defaultAccount} />
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route
+          path="/"
+          element={
+            <>
+              <LandingPage />
+              <Features />
+              <Footer />
+            </>
+          }
+        />
         <Route
           path="/connect"
           element={
