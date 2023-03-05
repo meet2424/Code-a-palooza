@@ -8,7 +8,7 @@ const LandingPage = () => {
         <div style={{ padding: "200px 0 0 50px" }}>
           <p className="font-sans text-6xl leading-tight font-bold text-white">
             Let's Make Voting Secure With{" "}
-            <span className="text-blue font-bold text-blue-900">ElectionChain</span>
+            <span className="text-blue font-bold text-blue-900">VoteChain</span>
           </p>
           <h3 className="font-sans text-3xl text-white" style={{ paddingTop: "20px" }}>
             Where Every Vote <span className="italic">Counts!</span>

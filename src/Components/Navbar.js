@@ -8,7 +8,7 @@ const Navbar = ({ connect, defaultAccount }) => {
   return (
     <>
       <div
-        className={`flex justify-between bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 sticky top-0 z-50 text-w text-lg ${
+        className={`flex justify-between bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 sticky top-0 z-50 text-white text-lg ${
           defaultAccount ? 'pl-40 pr-20' : 'px-40'
         } py-4  font-medium shadow`}
       >
@@ -18,7 +18,7 @@ const Navbar = ({ connect, defaultAccount }) => {
             navigate('/');
           }}
         >
-          ElectionChain
+          VoteChain
         </div>
         <div className="flex gap-20">
           <div
