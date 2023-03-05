@@ -55,8 +55,14 @@ def login(request):
 
 @api_view(['POST'])
 def success(request):
-    print(request.data)
-    email = []
-    data ={'email_body': f"Congratulations! your account is activated.", 'email_subject': "Account activated!",'to_email':email}
-    send_email(data)
+    add_list = request.data['data']
+    id = request.data["id"]
+    email = ["anish.kulkarni2002@gmail.com","meetp272003@gmail.com"]
+    users = User.objects.filter(address__in = add_list)
+    for mail in email:
+        data ={'email_body': f"You are eligible to vote for following id: {id}", 'email_subject': "Voting started",'to_email':mail}
+        send_email(data)
+    for user in users:
+        data ={'email_body': f"You are eligible to vote for following id: {id}", 'email_subject': "Voting started",'to_email':user.email}
+        send_email(data)
     return Response({"status" : True, "message" : 'Mail sent!'})
