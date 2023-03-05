@@ -28,7 +28,7 @@ contract RankBasedVoting{
     }
 
     function createSystem(uint _uniqueId, string memory _systemName, uint _numberOfCandidates, string[] memory _candidates,uint numberOfDays,string[] memory _votersForElection, string memory _electionHelderName,string memory _description) public   {
-        uint _votingPeriod = block.timestamp + (numberOfDays * 1 days);
+        uint _votingPeriod = block.timestamp + (numberOfDays * 1 minutes);
         VotingSystem memory system =  VotingSystem(_uniqueId,_systemName,_numberOfCandidates,_candidates,_votingPeriod,_votersForElection,_electionHelderName,_description);
         systems[_uniqueId] = system;
         systemCount++;

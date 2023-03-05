@@ -9,6 +9,7 @@ import VotingPage from './Pages/Voting';
 import { Poll } from './Pages/Poll';
 import Results from './Pages/Results';
 import Verify from './Pages/Verify';
+import LandingPage from './Pages/LandingPage';
 
 const App = () => {
   const [Message, setMessage] = useState(null);
@@ -164,7 +165,7 @@ const App = () => {
       <Routes>
         <Route
           path="/"
-          element={defaultAccount ? <LandingPage /> : <Verify />}
+          element={<LandingPage />}
         />
         <Route
           path="/connect"
