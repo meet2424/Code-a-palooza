@@ -260,7 +260,7 @@ const VotingPage = ({ defaultAccount }) => {
                           })}
                           <div
                             className="cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]"
-                            onClick={() => handleRankVote(item.id, , 'v1')}
+                            // onClick={() => handleRankVote(item.id,'v1')}
                           >
                             VOTE
                           </div>
