@@ -48,7 +48,7 @@ const VotingPage = ({ defaultAccount }) => {
           can: voters[2],
           system: voters[1],
           id: voters[0],
-          method: 'Voting',
+          method: 'Simple',
         });
         setData(d);
       }
@@ -118,7 +118,26 @@ const VotingPage = ({ defaultAccount }) => {
       return 'error';
     }
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log('net');
+    const getWinner = async (key) => {
+      const web3 = window.web3;
+      const networkId = await web3.eth.net.getId();
+      const networkData = Rank.networks[networkId];
+      console.log(networkData);
+      if (networkData) {
+        console.log('e');
+        // Assign contract
+        const dstorage = new web3.eth.Contract(Rank.abi, networkData.address);
+        const voters = await dstorage.methods.getWinner(key).call();
+        console.log(voters);
+
+        // window.alert('Success ' + s);
+        // return voters;
+      }
+    };
+    getWinner();
+  }, [key]);
 
   const getCanRank = async (item) => {
     const web3 = window.web3;
@@ -353,7 +372,7 @@ const VotingPage = ({ defaultAccount }) => {
                           {item.method} Voting Method
                         </div>
                         <div className="text-[1.12rem] tracking-wider font-semibold">
-                          Expires in 7 days
+                          {/* Expires in 7 days */}
                         </div>
                       </div>
                       <div className="pl-10 my-3 text-lg text-black font-medium">
@@ -363,6 +382,33 @@ const VotingPage = ({ defaultAccount }) => {
                       </div>
 
                       {item.method == 'Approval' && (
+                        <div className="pl-20">
+                          <div className="grid grid-cols-2">
+                            {item.candidates.map((c) => {
+                              return (
+                                <div className="flex gap-32 mt-4">
+                                  <div className="text-lg font-semibold text-black">
+                                    {c}{' '}
+                                  </div>
+                                  <div
+                                    className="cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]"
+                                    onClick={() =>
+                                      handleApprovalVote(
+                                        item.id,
+                                        c,
+                                        defaultAccount[0]
+                                      )
+                                    }
+                                  >
+                                    VOTE
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                      {item.method == 'Simple' && (
                         <div className="pl-20">
                           <div className="grid grid-cols-2">
                             {item.candidates.map((c) => {
