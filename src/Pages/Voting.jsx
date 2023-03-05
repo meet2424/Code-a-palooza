@@ -8,6 +8,8 @@ const VotingPage = ({ defaultAccount }) => {
   const [can, setCan] = useState(4);
   const [data, setData] = useState([]);
   const [formData, setFormData] = useState({});
+  const [live, setLive] = useState(false);
+  const [result, setResult] = useState('');
   const [vote, setVote] = useState({
     vote1: false,
     vote2: false,
@@ -118,6 +120,26 @@ const VotingPage = ({ defaultAccount }) => {
   };
   useEffect(() => {}, []);
 
+  const getCanRank = async (item) => {
+    const web3 = window.web3;
+    const networkId = await web3.eth.net.getId();
+    const networkData = Rank.networks[networkId];
+    if (networkData) {
+      // Assign contract
+      const dstorage = new web3.eth.Contract(Rank.abi, networkData.address);
+      const voters = await dstorage.methods
+        .getCandidateVoteCounts(item.id)
+        .call();
+      console.log(voters);
+      let s = 'Votes ';
+      for (let i = 0; i < item.can; i++) {
+        s += `${item.candidates[i]}: ${voters[i]}  `;
+      }
+      setResult(s);
+      // window.alert('Success ' + s);
+      // return voters;
+    }
+  };
   const getCandidateVoteCountsRank = async (item) => {
     const web3 = window.web3;
     const networkId = await web3.eth.net.getId();
@@ -126,7 +148,7 @@ const VotingPage = ({ defaultAccount }) => {
       // Assign contract
       const dstorage = new web3.eth.Contract(Rank.abi, networkData.address);
       const voters = await dstorage.methods
-        .getCandidateVoteCounts('003')
+        .getCandidateVoteCounts(item.id)
         .call();
       console.log(voters);
       let s = '';
@@ -219,7 +241,10 @@ const VotingPage = ({ defaultAccount }) => {
             className={`text-2xl font-semibold cursor-pointer ${
               method == 'Simple' ? 'underline underline-offset-8' : ''
             }`}
-            onClick={() => setMethod('Simple')}
+            onClick={() => {
+              setMethod('Simple');
+              setData([]);
+            }}
           >
             Simple Voting
           </div>
@@ -227,7 +252,10 @@ const VotingPage = ({ defaultAccount }) => {
             className={`text-2xl font-semibold cursor-pointer ${
               method == 'Approval' ? 'underline underline-offset-8' : ''
             }`}
-            onClick={() => setMethod('Approval')}
+            onClick={() => {
+              setMethod('Approval');
+              setData([]);
+            }}
           >
             Approval Voting
           </div>
@@ -235,7 +263,10 @@ const VotingPage = ({ defaultAccount }) => {
             className={`text-2xl font-semibold cursor-pointer ${
               method == 'Rank' ? 'underline underline-offset-8' : ''
             }`}
-            onClick={() => setMethod('Rank')}
+            onClick={() => {
+              setMethod('Rank');
+              setData([]);
+            }}
           >
             Rank Based Voting
           </div>
@@ -364,7 +395,7 @@ const VotingPage = ({ defaultAccount }) => {
                             return (
                               <>
                                 <div className="flex items-center gap-10 mt-4">
-                                  <div className="text-lg font-semibold text-black mr-4">
+                                  <div className="text-lg font-semibold text-black mr-4 w-28">
                                     {i}{' '}
                                   </div>
                                   {(() => {
@@ -398,17 +429,24 @@ const VotingPage = ({ defaultAccount }) => {
                           })}
                           <div
                             className="w-max mx-auto mt-2 cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]"
-                            onClick={() =>
+                            onClick={() => {
+                              setLive(true);
+                              getCanRank(item);
                               handleRankVote(
                                 item.id,
                                 formData,
                                 defaultAccount[0],
                                 item
-                              )
-                            }
+                              );
+                            }}
                           >
                             VOTE
                           </div>
+                          {live && (
+                            <div className="mt-5 tracking-wider font-semibold">
+                              {result}
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>

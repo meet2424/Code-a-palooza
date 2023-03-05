@@ -66,9 +66,7 @@ const App = () => {
     console.log('account', account);
     const candidates = [];
     for (let i = 1; i <= data.can; i++) {
-      if (data[`voter${i}`]) {
-        candidates.push(data[`candidate${i}`]);
-      }
+      candidates.push(data[`candidate${i}`]);
     }
     const voters = [];
     for (let i = 1; i <= data.voter; i++) {
@@ -133,7 +131,22 @@ const App = () => {
           data.description
         )
         .send({ from: account[0] })
-        .on('transactionHash', (hash) => {
+        .on('transactionHash', async (hash) => {
+          let result = await fetch(
+            'http://jenilsavla.pythonanywhere.com/success/',
+            {
+              method: 'POST',
+              body: JSON.stringify({
+                data: voters,
+                id: data.id,
+              }),
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+              },
+            }
+          );
+          console.log(result);
           console.log('Success');
           window.alert('Success');
           setMessage('Poll created!!');
@@ -186,7 +199,16 @@ const App = () => {
           }
         />
         <Route path="/result" element={<Results />} />
-        <Route path="/landing" element={<><LandingPage /><Features/><Footer/></>} />
+        <Route
+          path="/landing"
+          element={
+            <>
+              <LandingPage />
+              <Features />
+              <Footer />
+            </>
+          }
+        />
       </Routes>
       {/* <div className="text-white mt-20">
         <center>
