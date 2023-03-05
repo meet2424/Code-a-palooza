@@ -37,7 +37,7 @@ const VotingPage = ({ defaultAccount }) => {
         );
         const voters = await dstorage.methods.getSystemDetails('001').call();
         console.log(voters);
-        if (voters) {
+        if (voters[1] != '') {
           const d = [];
           d.push({
             creater: voters[6],
@@ -88,8 +88,8 @@ const VotingPage = ({ defaultAccount }) => {
         return 'error';
       }
     };
-    // getApproval();
-    getRank();
+    getApproval();
+    // getRank();
   }, []);
 
   function handleChange(event) {
@@ -124,6 +124,48 @@ const VotingPage = ({ defaultAccount }) => {
           id, //uniqueId
           candidate, //System Name
           voter // _numberOfCandidates
+        )
+        .send({ from: defaultAccount[0] })
+        .on('transactionHash', (hash) => {
+          console.log('Success');
+          window.alert('Success');
+        });
+      // return voters;
+    } else {
+      window.alert('DStorage contract not deployed to detected network.');
+      return 'error';
+    }
+  };
+  const handleRankVote = async (id, data, voter) => {
+    // var sortArray = [];
+
+    // for (let i in data) {
+    //   sortArray.push({ key: i, value: data[i] });
+    // }
+
+    // sortArray.sort(function (a, b) {
+    //   return a.value - b.value;
+    // });
+
+    // let newList = {};
+    // for (let i in sortArray) {
+    //   newList[sortArray[i].key] = sortArray[i].value;
+    // }
+
+    const arr = Object.values(data);
+    // console.log(arr);
+    // console.log(voter);
+    const web3 = window.web3;
+    const networkId = await web3.eth.net.getId();
+    const networkData = Rank.networks[networkId];
+    if (networkData) {
+      // Assign contract
+      const dstorage = new web3.eth.Contract(Rank.abi, networkData.address);
+      const res = await dstorage.methods
+        .castRankVote(
+          id, //uniqueId
+          voter,
+          arr
         )
         .send({ from: defaultAccount[0] })
         .on('transactionHash', (hash) => {
@@ -233,18 +275,15 @@ const VotingPage = ({ defaultAccount }) => {
                                         <div className="tracking-wide font-extralight ">
                                           <input
                                             type="radio"
-                                            id={`rank${index}${j}`}
-                                            name={`rank${index}`}
-                                            value={`rank${index}${j}`}
-                                            checked={
-                                              formData[`rank${index}`] ===
-                                              `rank${index}${j}`
-                                            }
+                                            id={`rank${index + 1}${j}`}
+                                            name={i}
+                                            value={`${j}`}
+                                            checked={formData[i] === `${j}`}
                                             onChange={handleChange}
                                             className="mr-2 text-xl cursor-pointer"
                                           />
                                           <label
-                                            htmlFor={`rank${index}${j}`}
+                                            htmlFor={`rank${index + 1}${j}`}
                                             className="text-lg cursor-pointer"
                                           >
                                             {j}
@@ -259,8 +298,10 @@ const VotingPage = ({ defaultAccount }) => {
                             );
                           })}
                           <div
-                            className="cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]"
-                            onClick={() => handleRankVote(item.id, , 'v1')}
+                            className="w-max mx-auto mt-2 cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]"
+                            onClick={() =>
+                              handleRankVote(item.id, formData, 'v2')
+                            }
                           >
                             VOTE
                           </div>

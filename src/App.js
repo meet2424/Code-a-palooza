@@ -165,7 +165,7 @@ const App = () => {
       <Routes>
         <Route
           path="/"
-          element={defaultAccount ? <VotingPage /> : <Verify />}
+          element={defaultAccount ? <LandingPage /> : <Verify />}
         />
         <Route
           path="/connect"
