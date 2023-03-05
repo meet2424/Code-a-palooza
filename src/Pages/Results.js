@@ -33,24 +33,28 @@ const Results = () => {
             <div className=" rounded">
               <img className="w-40 rounded-full" src={img1} alt="img" />
               <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">John</div>
+                <div className="font-bold text-xl mb-2">Jenil</div>
               </div>
             </div>
             <div className="">
               <img className="w-40 rounded-full" src={img1} alt="img" />
-              <div className="font-bold text-xl">John</div>
+              <div className="px-6 py-4">
+                <div className="font-bold text-xl mb-2">Anish</div>
+              </div>
             </div>
-          </div>
-          <div className=" rounded">
-            <img className="w-40 rounded-full" src={img1} alt="img" />
-            <div className="px-6 py-4">
-              <div className="font-bold text-xl mb-2">John</div>
-            </div>
-          </div>
-          <div className=" rounded">
-            <img className="w-40 rounded-full" src={img1} alt="img" />
-            <div className="px-6 py-4">
-              <div className="font-bold text-xl">John</div>
+            <div className="flex justify-between">
+              <div className=" rounded">
+                <img className="w-40 rounded-full" src={img1} alt="img" />
+                <div className="px-6 py-4">
+                  <div className="font-bold text-xl mb-2">Meet</div>
+                </div>
+              </div>
+              <div className=" rounded">
+                <img className="w-40 rounded-full" src={img1} alt="img" />
+                <div className="px-6 py-4">
+                  <div className="font-bold text-xl">Rachana</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
