@@ -23,9 +23,9 @@ const Features = () => {
           <div className="px-6 py-4">
             <div className="font-bold text-xl mb-2">Voter Verification</div>
             <p className="text-gray-700 text-base">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Voluptatibus quia, nulla! Maiores et perferendis eaque,
-              exercitationem praesentium nihil.
+              To prevent fraud and ensure the authenticity of the votes, the
+              platform can use a multi-factor authentication system to verify
+              the identity of voters.
             </p>
           </div>
         </div>
@@ -35,9 +35,9 @@ const Features = () => {
               Immutable Voting Records
             </div>
             <p className="text-gray-700 text-base">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Voluptatibus quia, nulla! Maiores et perferendis eaque,
-              exercitationem praesentium nihil.
+              The platform can store all voting records on the blockchain,
+              ensuring that they are immutable and tamper-proof. This can
+              provide a transparent.
             </p>
           </div>
         </div>
@@ -47,9 +47,9 @@ const Features = () => {
               Real-time Vote Tallying
             </div>
             <p className="text-gray-700 text-base">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Voluptatibus quia, nulla! Maiores et perferendis eaque,
-              exercitationem praesentium nihil.
+              The platform can provide real-time vote tallying, allowing
+              stakeholders to see the results of the vote as soon as they are
+              available.
             </p>
           </div>
         </div>
@@ -57,9 +57,9 @@ const Features = () => {
           <div className="px-6 py-4">
             <div className="font-bold text-xl mb-2">Tamper-proof Records</div>
             <p className="text-gray-700 text-base">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Voluptatibus quia, nulla! Maiores et perferendis eaque,
-              exercitationem praesentium nihil.
+              The platform can store all voting records on the blockchain,
+              ensuring that they are immutable and tamper-proof. This can
+              provide a transparent.
             </p>
           </div>
         </div>
@@ -67,9 +67,9 @@ const Features = () => {
           <div className="px-6 py-4">
             <div className="font-bold text-xl mb-2">Secure Voting</div>
             <p className="text-gray-700 text-base">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Voluptatibus quia, nulla! Maiores et perferendis eaque,
-              exercitationem praesentium nihil.
+              The platform can provide real-time vote tallying, allowing
+              stakeholders to see the results of the vote as soon as they are
+              available.
             </p>
           </div>
         </div>
