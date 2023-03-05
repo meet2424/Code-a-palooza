@@ -9,6 +9,9 @@ import VotingPage from './Pages/Voting';
 import { Poll } from './Pages/Poll';
 import Results from './Pages/Results';
 import Verify from './Pages/Verify';
+import LandingPage from './Pages/LandingPage';
+import Features from './Components/Features';
+import Footer from './Components/Footer';
 
 const App = () => {
   const [Message, setMessage] = useState(null);
@@ -156,7 +159,6 @@ const App = () => {
       return 'error';
     }
   };
-  // const result = await contract.methods.<method-name>(<arguments>).call();
 
   return (
     <>
@@ -187,6 +189,7 @@ const App = () => {
           }
         />
         <Route path="/result" element={<Results />} />
+        <Route path="/landing" element={<><LandingPage /><Features/><Footer/></>} />
       </Routes>
       {/* <div className="text-white mt-20">
         <center>
