@@ -40,7 +40,7 @@ def signup(request):
         serializer.save(is_active = True)
         response = {'success': True, 'message': 'User created successully.'}
     else:
-        response = {'success': True, 'message': serializer.errors}
+        response = {'success': False, 'message': serializer.errors}
     return JsonResponse(response)
 
 @api_view(['POST'])
@@ -55,6 +55,7 @@ def login(request):
 
 @api_view(['POST'])
 def success(request):
+    print(request.data)
     email = []
     data ={'email_body': f"Congratulations! your account is activated.", 'email_subject': "Account activated!",'to_email':email}
     send_email(data)
