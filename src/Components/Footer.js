@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <>
@@ -30,20 +30,16 @@ const Footer = () => {
               </h2>
               <ul className="text-gray-600 dark:text-gray-400">
                 <li className="mb-4 text-white">
-                  <a
-                    href="https://github.com/themesberg/flowbite"
-                    className="hover:underline "
-                  >
-                    Home
-                  </a>
+                  <Link to="/">Home</Link>
                 </li>
-                <li className="text-white">
-                  <a
-                    href="https://discord.gg/4eeurUVvTy"
-                    className="hover:underline"
-                  >
-                    Vote
-                  </a>
+                <li className="mb-4 text-white">
+                  <Link>Vote</Link>
+                </li>
+                <li className="mb-4 text-white">
+                  <Link to="/results">Results</Link>
+                </li>
+                <li className="mb-4 text-white">
+                  <Link to="/connect">Connect</Link>
                 </li>
               </ul>
             </div>
@@ -51,8 +47,10 @@ const Footer = () => {
         </div>
         <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
         <div className="sm:flex sm:items-center sm:justify-between">
-          <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-            <p className="text-white justify-center text-lg font-medium">Designed & Developed by Team Code-a-Palooza</p>
+          <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400 justify-center">
+            <p className="text-white text-lg font-medium">
+              Designed & Developed by Team Code-a-Palooza
+            </p>
           </span>
         </div>
       </footer>
