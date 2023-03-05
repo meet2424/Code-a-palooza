@@ -4,6 +4,7 @@ import Rank from '../abis/RankBasedVoting.json';
 import React, { useEffect, useState } from 'react';
 const VotingPage = ({ defaultAccount }) => {
   const [method, setMethod] = useState('Approval');
+  const [key, setKey] = useState('');
   const [can, setCan] = useState(4);
   const [data, setData] = useState([]);
   const [formData, setFormData] = useState({});
@@ -11,6 +12,7 @@ const VotingPage = ({ defaultAccount }) => {
     vote1: false,
     vote2: false,
   });
+
   // const data = [
   //   {
   //     creater: 'Daniel Beerer',
@@ -24,74 +26,117 @@ const VotingPage = ({ defaultAccount }) => {
   //   },
   // ];
 
-  useEffect(() => {
-    const getApproval = async () => {
-      const web3 = window.web3;
-      const networkId = await web3.eth.net.getId();
-      const networkData = Approval.networks[networkId];
-      if (networkData) {
-        // Assign contract
-        const dstorage = new web3.eth.Contract(
-          Approval.abi,
-          networkData.address
-        );
-        const voters = await dstorage.methods.getSystemDetails('001').call();
-        console.log(voters);
-        if (voters[1] != '') {
-          const d = [];
-          d.push({
-            creater: voters[6],
-            description: voters[7],
-            days: '7 Days',
-            candidates: voters[3],
-            voters: voters[5],
-            can: voters[2],
-            system: voters[1],
-            id: voters[0],
-            method: 'Approval',
-          });
-          setData(d);
-        }
-        // return voters;
-      } else {
-        window.alert('DStorage contract not deployed to detected network.');
-        return 'error';
+  const getSimple = async (key) => {
+    const web3 = window.web3;
+    const networkId = await web3.eth.net.getId();
+    const networkData = Voting.networks[networkId];
+    if (networkData) {
+      // Assign contract
+      const dstorage = new web3.eth.Contract(Voting.abi, networkData.address);
+      const voters = await dstorage.methods.getSystemDetails(key).call();
+      console.log(voters);
+      if (voters[1] != '') {
+        const d = [];
+        d.push({
+          creater: voters[6],
+          description: voters[7],
+          days: voters[4],
+          candidates: voters[3],
+          voters: voters[5],
+          can: voters[2],
+          system: voters[1],
+          id: voters[0],
+          method: 'Voting',
+        });
+        setData(d);
       }
-    };
-    const getRank = async () => {
-      const web3 = window.web3;
-      const networkId = await web3.eth.net.getId();
-      const networkData = Rank.networks[networkId];
-      if (networkData) {
-        // Assign contract
-        const dstorage = new web3.eth.Contract(Rank.abi, networkData.address);
-        const voters = await dstorage.methods.getSystemDetails('003').call();
-        console.log(voters);
-        if (voters) {
-          const d = [];
-          d.push({
-            creater: voters[6],
-            description: voters[7],
-            days: '7 Days',
-            candidates: voters[3],
-            voters: voters[5],
-            can: voters[2],
-            system: voters[1],
-            id: voters[0],
-            method: 'Rank',
-          });
-          setData(d);
-        }
-        // return voters;
-      } else {
-        window.alert('DStorage contract not deployed to detected network.');
-        return 'error';
+      // return voters;
+    } else {
+      window.alert('DStorage contract not deployed to detected network.');
+      return 'error';
+    }
+  };
+  const getApproval = async (key) => {
+    const web3 = window.web3;
+    const networkId = await web3.eth.net.getId();
+    const networkData = Approval.networks[networkId];
+    if (networkData) {
+      // Assign contract
+      const dstorage = new web3.eth.Contract(Approval.abi, networkData.address);
+      const voters = await dstorage.methods.getSystemDetails(key).call();
+      console.log(voters);
+      if (voters[1] != '') {
+        const d = [];
+        d.push({
+          creater: voters[6],
+          description: voters[7],
+          days: voters[4],
+          candidates: voters[3],
+          voters: voters[5],
+          can: voters[2],
+          system: voters[1],
+          id: voters[0],
+          method: 'Approval',
+        });
+        setData(d);
       }
-    };
-    getApproval();
-    // getRank();
-  }, []);
+      // return voters;
+    } else {
+      window.alert('DStorage contract not deployed to detected network.');
+      return 'error';
+    }
+  };
+  const getRank = async (key) => {
+    const web3 = window.web3;
+    const networkId = await web3.eth.net.getId();
+    const networkData = Rank.networks[networkId];
+    if (networkData) {
+      // Assign contract
+      const dstorage = new web3.eth.Contract(Rank.abi, networkData.address);
+      const voters = await dstorage.methods.getSystemDetails(key).call();
+      console.log(voters);
+      if (voters) {
+        const d = [];
+        d.push({
+          creater: voters[6],
+          description: voters[7],
+          days: voters[4],
+          candidates: voters[3],
+          voters: voters[5],
+          can: voters[2],
+          system: voters[1],
+          id: voters[0],
+          method: 'Rank',
+        });
+        setData(d);
+      }
+      // return voters;
+    } else {
+      window.alert('DStorage contract not deployed to detected network.');
+      return 'error';
+    }
+  };
+  useEffect(() => {}, []);
 
+  const getCandidateVoteCountsRank = async (item) => {
+    const web3 = window.web3;
+    const networkId = await web3.eth.net.getId();
+    const networkData = Rank.networks[networkId];
+    if (networkData) {
+      // Assign contract
+      const dstorage = new web3.eth.Contract(Rank.abi, networkData.address);
+      const voters = await dstorage.methods
+        .getCandidateVoteCounts('003')
+        .call();
+      console.log(voters);
+      let s = '';
+      for (let i = 0; i < item.can; i++) {
+        s += `${item.candidates[i]} ${voters[i]} `;
+      }
+      window.alert('Success ' + s);
+      // return voters;
+    }
+  };
   function handleChange(event) {
     const { name, value, type, checked } = event.target;
     setFormData((prevFormData) => {
@@ -136,22 +181,7 @@ const VotingPage = ({ defaultAccount }) => {
       return 'error';
     }
   };
-  const handleRankVote = async (id, data, voter) => {
-    // var sortArray = [];
-
-    // for (let i in data) {
-    //   sortArray.push({ key: i, value: data[i] });
-    // }
-
-    // sortArray.sort(function (a, b) {
-    //   return a.value - b.value;
-    // });
-
-    // let newList = {};
-    // for (let i in sortArray) {
-    //   newList[sortArray[i].key] = sortArray[i].value;
-    // }
-
+  const handleRankVote = async (id, data, voter, item) => {
     const arr = Object.values(data);
     // console.log(arr);
     // console.log(voter);
@@ -170,7 +200,7 @@ const VotingPage = ({ defaultAccount }) => {
         .send({ from: defaultAccount[0] })
         .on('transactionHash', (hash) => {
           console.log('Success');
-          window.alert('Success');
+          getCandidateVoteCountsRank(item);
         });
       // return voters;
     } else {
@@ -182,9 +212,74 @@ const VotingPage = ({ defaultAccount }) => {
     <>
       <div className="px-20 tracking-wider">
         <div className="mt-20 text-6xl text-grey font-bold">Voting</div>
-        <div className="mt-5 text-6xl text-black font-semibold">
-          Open Votes : 2
+        <div className="mt-5 text-6xl text-black font-semibold">Open Votes</div>
+
+        <div className="mt-20 flex gap-28">
+          <div
+            className={`text-2xl font-semibold cursor-pointer ${
+              method == 'Simple' ? 'underline underline-offset-8' : ''
+            }`}
+            onClick={() => setMethod('Simple')}
+          >
+            Simple Voting
+          </div>
+          <div
+            className={`text-2xl font-semibold cursor-pointer ${
+              method == 'Approval' ? 'underline underline-offset-8' : ''
+            }`}
+            onClick={() => setMethod('Approval')}
+          >
+            Approval Voting
+          </div>
+          <div
+            className={`text-2xl font-semibold cursor-pointer ${
+              method == 'Rank' ? 'underline underline-offset-8' : ''
+            }`}
+            onClick={() => setMethod('Rank')}
+          >
+            Rank Based Voting
+          </div>
         </div>
+
+        <div className="flex items-center justify-center w-max mx-auto bg-white shadow-md rounded-md mt-10 border-grey border-[0.05rem] px-5 py-2">
+          <div className="flex items-center gap-5">
+            <div className="text-black tracking-wider">Enter Key : </div>
+            <input
+              type="text"
+              className="placeholder:text-[1.0rem] bg-w outline-none py-[0.5rem] px-4 border-gray-300 border-[0.08rem]"
+              placeholder="Enter here"
+              onChange={(e) => {
+                setKey(e.target.value);
+              }}
+            />
+          </div>
+          <div className=" flex justify-center items-center ml-4">
+            <div className="">
+              <button
+                className="px-5 py-2 bg-blue-500 text-white hover:bg-blue-400 text-lg rounded-full"
+                onClick={() => {
+                  switch (method) {
+                    case 'Approval':
+                      getApproval(key);
+                      break;
+                    case 'Rank':
+                      getRank(key);
+                      break;
+                    case 'Simple':
+                      getSimple(key);
+                      break;
+
+                    default:
+                      break;
+                  }
+                }}
+              >
+                Enter
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div className="flex mt-20">
           <div className="pl-4 uppercase text-sm tracking-widest text-black font-bold w-[25%]">
             Created By
@@ -248,7 +343,11 @@ const VotingPage = ({ defaultAccount }) => {
                                   <div
                                     className="cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]"
                                     onClick={() =>
-                                      handleApprovalVote(item.id, c, 'v1')
+                                      handleApprovalVote(
+                                        item.id,
+                                        c,
+                                        defaultAccount[0]
+                                      )
                                     }
                                   >
                                     VOTE
@@ -300,7 +399,12 @@ const VotingPage = ({ defaultAccount }) => {
                           <div
                             className="w-max mx-auto mt-2 cursor-pointer text-sm border-ble bg-ble text-w rounded-md font-bold border-[0.05rem] px-4 py-[0.25rem]"
                             onClick={() =>
-                              handleRankVote(item.id, formData, 'v2')
+                              handleRankVote(
+                                item.id,
+                                formData,
+                                defaultAccount[0],
+                                item
+                              )
                             }
                           >
                             VOTE
@@ -314,20 +418,6 @@ const VotingPage = ({ defaultAccount }) => {
               </div>
             );
           })}
-          {/* <div className="flex py-5 items-center cursor-pointer hover:bg-gray-100">
-            <div className="pl-5 uppercase text-sm tracking-wide text-black font-medium w-[25%]">
-              Daniel Beerer
-            </div>
-            <div className="uppercase text-sm tracking-wide text-black font-medium w-[50%]">
-              Should we merge the last commit made around updating...
-            </div>
-            <div className="uppercase text-sm tracking-wide text-black font-medium w-[15%] cursor-pointer">
-              7 Days
-            </div>
-            <div className="cursor-pointer text-sm border-title text-title font-bold border-[0.05rem] px-4 py-[0.35rem]">
-              VOTE
-            </div>
-          </div> */}
           <div className=""></div>
         </div>
       </div>

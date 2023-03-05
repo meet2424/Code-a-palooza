@@ -144,13 +144,24 @@ export const Poll = ({ createPoll, defaultAccount }) => {
             </div>
             <div className="flex items-center gap-10 mt-5">
               <div className="text-black tracking-wider w-[18%]">
-                Number of Days :{' '}
+                Number of Minutes :{' '}
               </div>
               <input
                 type="text"
                 className="placeholder:text-[1.0rem] bg-w outline-none py-[0.5rem] w-[70%] px-4 mt-2 border-gray-300 border-[0.08rem]"
-                placeholder="Enter days"
-                onChange={(e) => handleValue('days', e.target.value)}
+                placeholder="Enter minutes"
+                onChange={(e) => handleValue('minutes', e.target.value)}
+              />
+            </div>
+            <div className="flex items-center gap-10 mt-5">
+              <div className="text-black tracking-wider w-[18%]">
+                Unique Id :{' '}
+              </div>
+              <input
+                type="text"
+                className="placeholder:text-[1.0rem] bg-w outline-none py-[0.5rem] w-[70%] px-4 mt-2 border-gray-300 border-[0.08rem]"
+                placeholder="Enter here"
+                onChange={(e) => handleValue('id', e.target.value)}
               />
             </div>
             <div className="mt-4 mb-4 flex justify-end">

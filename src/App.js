@@ -121,11 +121,11 @@ const App = () => {
       // console.log(dstorage);
       const res = await dstorage.methods
         .createSystem(
-          '003', //uniqueId
+          data.id, //uniqueId
           data.systemName, //System Name
           data.can, // _numberOfCandidates
           candidates, //_candidates
-          data.days, //numberOfDays
+          data.minutes, //numberOfDays
           voters, //_votersForElection
           data.electionHelderName, //_electionHelderName
           data.description
@@ -163,10 +163,7 @@ const App = () => {
     <>
       <Navbar connect={connectWallet} defaultAccount={defaultAccount} />
       <Routes>
-        <Route
-          path="/"
-          element={<LandingPage />}
-        />
+        <Route path="/" element={<LandingPage />} />
         <Route
           path="/connect"
           element={
