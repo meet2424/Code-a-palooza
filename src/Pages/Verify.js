@@ -1,14 +1,31 @@
 import React, { useState } from 'react';
-
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 const Verify = ({ connect, defaultAccount }) => {
   const [step, setStep] = useState(0);
   const [can, setCan] = useState(0);
   const [formData, setFormData] = useState({});
   const [email, setEmail] = useState('');
   const [pan, setPan] = useState('');
-
+  const [load, setLoad] = useState(false);
+  const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
+    setLoad(true);
+
+    const options = {
+      method: 'POST',
+      url: 'https://pan-card-verification1.p.rapidapi.com/v3/tasks/sync/verify_with_source/ind_pan',
+      headers: {
+        'content-type': 'application/json',
+        'X-RapidAPI-Key': '15b6349dcemsh9d506902b260d0fp1b6792jsna64ed0116bd9',
+        'X-RapidAPI-Host': 'pan-card-verification1.p.rapidapi.com',
+      },
+      data: `{"task_id":"74f4c926-250c-43ca-9c53-453e87ceacd1","group_id":"8e16424a-58fc-4ba4-ab20-5bc8e7c3c41e","data":{"id_number":"${pan}"}}`,
+    };
+    // axios.request(options).then(function (response) {
+    //   // console.log(response.data);
+    // });
     createacc();
   };
   async function createacc() {
@@ -39,9 +56,17 @@ const Verify = ({ connect, defaultAccount }) => {
       //   // Swal.fire("Oops!!", "Some error while login", "error");
       //   console.log("error");
       // }
+      if (result.success == true) {
+        window.alert('Verified Successfully!!');
+        navigate('/');
+      } else {
+        window.alert('Invaild Credentials');
+      }
     } catch (error) {
       console.log('Error' + error);
+      window.alert('Invaild Credentials');
     }
+    setLoad(false);
   }
 
   return (
@@ -122,7 +147,8 @@ const Verify = ({ connect, defaultAccount }) => {
                   name="password"
                   id="password"
                   className="placeholder:text-[1.0rem] bg-w outline-none py-[0.5rem] w-[70%] px-4 mt-2 border-gray-300 border-[0.08rem]"
-                  placeholder="Enter here"
+                  // placeholder="Enter here"
+                  placeholder="AAAAA1234A"
                   onChange={(e) => setPan(e.target.value)}
                   value={pan}
                 />
@@ -131,10 +157,32 @@ const Verify = ({ connect, defaultAccount }) => {
                 <div className="">
                   <button
                     // type="submit"
-                    className="px-5 py-2 bg-blue-500 text-white hover:bg-blue-400 text-lg rounded-full"
+                    className="px-5 py-2 flex items-center bg-blue-500 text-white hover:bg-blue-400 text-lg rounded-full"
                     onClick={(e) => handleSubmit(e)}
                   >
-                    Verify
+                    {load && (
+                      <svg
+                        class="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          class="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          // strokeWidth="4"
+                        ></circle>
+                        <path
+                          class="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                    )}
+                    {load ? 'Verifiying...' : 'Verified'}
                   </button>
                 </div>
               </div>

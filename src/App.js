@@ -166,7 +166,7 @@ const App = () => {
       <Routes>
         <Route
           path="/"
-          element={defaultAccount ? <VotingPage /> : <Verify />}
+          element={<LandingPage />}
         />
         <Route
           path="/connect"
